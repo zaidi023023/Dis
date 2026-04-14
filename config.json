@@ -1,0 +1,7 @@
+{
+    "amplifier_url": "https://physiqueacademy.net/xmlrpc.php",
+    "victim_url": "http://example.com",
+    "requests_per_minute": 60,
+    "duration_minutes": 10,
+    "threads": 5
+}
