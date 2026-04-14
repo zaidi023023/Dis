@@ -1,4 +1,4 @@
-name: Amplifier Monitor
+name: Amplifier Monitor x
 
 on:
   workflow_dispatch:
